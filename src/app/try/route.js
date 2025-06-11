@@ -28,28 +28,21 @@ export async function GET(request) {
   let browser = null;
   try {
     browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: "new",
+      ignoreDefaultArgs: ["--enable-automation"],
+      args: isDev
+        ? [
+          "--disable-blink-features=AutomationControlled",
+          "--disable-features=site-per-process",
+          "--disable-site-isolation-trials",
+        ]
+        : [...chromium.args, "--disable-blink-features=AutomationControlled"],
+      defaultViewport: { width: 1920, height: 1080 },
+      executablePath: isDev
+        ? localExecutablePath
+        : await chromium.executablePath(remoteExecutablePath),
+      headless: isDev ? false : "new",
+      debuggingPort: isDev ? 9222 : undefined,
     });
-    
-    // browser = await puppeteer.launch({
-    //   ignoreDefaultArgs: ["--enable-automation"],
-    //   args: isDev
-    //     ? [
-    //       "--disable-blink-features=AutomationControlled",
-    //       "--disable-features=site-per-process",
-    //       "--disable-site-isolation-trials",
-    //     ]
-    //     : [...chromium.args, "--disable-blink-features=AutomationControlled"],
-    //   defaultViewport: { width: 1920, height: 1080 },
-    //   executablePath: isDev
-    //     ? localExecutablePath
-    //     : await chromium.executablePath(remoteExecutablePath),
-    //   headless: isDev ? false : "new",
-    //   debuggingPort: isDev ? 9222 : undefined,
-    // });
   
     const page = await browser.newPage(); // ✅ Always use newPage()
   
