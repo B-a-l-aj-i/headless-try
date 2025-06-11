@@ -5,7 +5,7 @@ export const localExecutablePath =
     ? "/usr/bin/google-chrome"
     : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
     export const remoteExecutablePath =
-    "https://github.com/Sparticuz/chromium/releases/download/v122.0.0/chromium-v122.0.0-pack.tar";
+    "https://github.com/Sparticuz/chromium/releases/download/v122.0.0/chromium-v122.0.0-pack.tar"
   
 
 export const isDev = process.env.NODE_ENV === "development";
