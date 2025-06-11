@@ -8,6 +8,7 @@ import {
   userAgent,
   remoteExecutablePath,
 } from "@/utils/utils";
+export const runtime = "nodejs";
 
 export const maxDuration = 60; // This function can run for a maximum of 60 seconds (update by 2024-05-10)
 export const dynamic = "force-dynamic";
