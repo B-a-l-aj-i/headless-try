@@ -1,9 +1,7 @@
 {
     "functions": {
       "api/**.ts": {
-        "includeFiles": [
-          "node_modules/@sparticuz/chromium-min/bin/**"
-        ]
+        "includeFiles":  "node_modules/@sparticuz/chromium-min/bin/**"
       },
       "app/try/route.ts": {
         "runtime": "nodejs20"
