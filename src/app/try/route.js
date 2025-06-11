@@ -31,10 +31,10 @@ export async function GET(request) {
       ignoreDefaultArgs: ["--enable-automation"],
       args: isDev
         ? [
-            "--disable-blink-features=AutomationControlled",
-            "--disable-features=site-per-process",
-            "-disable-site-isolation-trials",
-          ]
+          "--disable-blink-features=AutomationControlled",
+          "--disable-features=site-per-process",
+          "--disable-site-isolation-trials",
+        ]
         : [...chromium.args, "--disable-blink-features=AutomationControlled"],
       defaultViewport: { width: 1920, height: 1080 },
       executablePath: isDev
@@ -43,39 +43,36 @@ export async function GET(request) {
       headless: isDev ? false : "new",
       debuggingPort: isDev ? 9222 : undefined,
     });
-
-    const pages = await browser.pages();
-    const page = pages[0];
+  
+    const page = await browser.newPage(); // ✅ Always use newPage()
+  
     await page.setUserAgent(userAgent);
     await page.setViewport({ width: 1920, height: 1080 });
+  
     const preloadFile = fs.readFileSync(
       path.join(process.cwd(), "/src/utils/preload.js"),
       "utf8"
     );
     await page.evaluateOnNewDocument(preloadFile);
+  
     await page.goto(urlStr, {
       waitUntil: "networkidle2",
       timeout: 60000,
     });
+  
     await cfCheck(page);
-
-    console.log("page title", await page.title());
+  
     const blob = await page.screenshot({ type: "png" });
-
+  
     const headers = new Headers();
-
     headers.set("Content-Type", "image/png");
     headers.set("Content-Length", blob.length.toString());
-
-    // or just use new Response ❗️
+  
     return new NextResponse(blob, { status: 200, statusText: "OK", headers });
   } catch (err) {
-    console.log(err);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    console.error(err);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   } finally {
-    await browser.close();
-  }
+    if (browser) await browser.close();
+  } 
 }
