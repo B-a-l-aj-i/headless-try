@@ -37,10 +37,8 @@ export async function GET(request) {
           ]
         : [...chromium.args, "--disable-blink-features=AutomationControlled"],
       defaultViewport: { width: 1920, height: 1080 },
-      executablePath: isDev
-        ? localExecutablePath
-        : await chromium.executablePath(remoteExecutablePath),
-      headless: isDev ? false : "new",
+      executablePath: await chromium.executablePath(),
+      headless: true,
       debuggingPort: isDev ? 9222 : undefined,
     });
 
@@ -76,6 +74,6 @@ export async function GET(request) {
       { status: 500 }
     );
   } finally {
-    await browser.close();
+    await browser.close()
   }
 }
