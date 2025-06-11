@@ -1,10 +1,11 @@
 {
     "functions": {
-      "api/**.js": {
-        "includeFiles":  "node_modules/@sparticuz/chromium-min/bin/**"
-      },
-      "app/try/route.js": {
-        "runtime": "nodejs20"
+      "app/**/route.js": {
+        "includeFiles": [
+          "node_modules/@sparticuz/chromium-min/bin/**"
+        ],
+        "maxDuration": 60
       }
     }
   }
+  
